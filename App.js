@@ -1,14 +1,23 @@
 
 import React,{ useState } from 'react';
 import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar } from 'react-native';
-// import { BookList } from './src/components/BookList' 
+import { BookList } from './src/screens/BookList' 
 import { Home } from './src/screens/Home';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   
   return (
-    <Home />
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Home' screenOptions={{fullScreenGestureEnabled: true,headerShown:false}}>
+        {/* <Home /> */}
+        <Stack.Screen name="Home" component={Home} options={{title:'Overview',gestureEnabled:true}}/>
+        <Stack.Screen name='Books' component={BookList} options={{gestureEnabled:true}} initialParams={{param:"No param given"}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 
 }

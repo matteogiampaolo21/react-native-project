@@ -28,9 +28,8 @@ export const Book = ({data}) => {
 const styles = StyleSheet.create({
     container:{
         marginBottom:20,
-        borderWidth:3,
+        borderWidth:2,
         padding:10,
-        borderRadius:5,
     },
     title:{
         fontSize:18,
@@ -46,6 +45,5 @@ const styles = StyleSheet.create({
         color:'white',
         paddingHorizontal:5,
         paddingVertical:1,
-        borderRadius:5,
     }
 })

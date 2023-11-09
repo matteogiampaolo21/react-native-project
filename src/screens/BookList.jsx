@@ -1,20 +1,30 @@
 import React from "react";
 import { bookData } from "../myData";
 import {Book} from '../components/Book';
-import { FlatList, SafeAreaView,StyleSheet,StatusBar, Text } from "react-native";
+import { FlatList, SafeAreaView,StyleSheet,StatusBar,View, Text,Button,ScrollView } from "react-native";
 
-export const BookList = () => {
-    
+export const BookList = ({navigation}) => {
     return(
       <SafeAreaView style={styles.wrapper}>
         <StatusBar/>
-        <Text style={styles.header}>Book</Text>
-        <FlatList 
-            data={bookData}
-            renderItem={(book) => <Book data={book.item} /> }
-            keyExtractor={(book) => book.id}
-            style={styles.mylist} 
-        />
+        <ScrollView>
+          <FlatList 
+              data={bookData}
+              scrollEnabled={false}
+              renderItem={(book) => <Book data={book.item} /> }
+              keyExtractor={(book) => book.id}
+              style={styles.mylist} 
+          />
+          <View style={styles.buttonContainer}>
+            <Button
+              title='Return to home.'
+              onPress={() => {navigation.navigate("Home") }}          
+            />
+          </View>
+        </ScrollView>
+
+
+        
       </SafeAreaView> 
     )
 }
@@ -30,6 +40,14 @@ const styles = StyleSheet.create({
     paddingTop:20,
   },
   mylist:{
-    padding:20,
+    paddingTop:20,
+    paddingHorizontal:20,
+  },
+  buttonContainer:{
+      marginHorizontal:20,
+      marginBottom:20,
+      borderWidth:2,
+      backgroundColor:'#2196f3',
   }
+
 })
