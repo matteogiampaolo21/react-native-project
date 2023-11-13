@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCCDWx_FwaVhYiTjIKoLfCVdhIDdRFXiIw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>777928996457</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mybrand.reactnativeapp1</string>
+	<key>PROJECT_ID</key>
+	<string>react-native-app-d0f1a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>react-native-app-d0f1a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:777928996457:ios:af698aa9c57f9c858454f8</string>
+</dict>
+</plist>

@@ -24,14 +24,16 @@ export default function App() {
   
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home' screenOptions={{fullScreenGestureEnabled: true,headerShown:false}}>
-        <Stack.Screen name="Home" component={Home} options={{title:'Overview',gestureEnabled:true}}/>
-        <Stack.Screen name="Create" component={Create} options={{title:'Overview',gestureEnabled:true}}/>
-        <Stack.Screen name="Projects" component={Projects} options={{title:'Overview',gestureEnabled:true}}/>
-        <Stack.Screen name="Profile" component={Profile} options={{title:'Overview',gestureEnabled:true}}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={{flex:1,backgroundColor:"#262626"}}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Home' screenOptions={{fullScreenGestureEnabled: true,headerStyle:{backgroundColor:"#171717"},headerTintColor:"white"}}>
+          <Stack.Screen name="Home" component={Home} options={{title:'Overview',gestureEnabled:true,headerShown:false}}/>
+          <Stack.Screen name="Create" component={Create} options={{title:'Create Project',gestureEnabled:true}}/>
+          <Stack.Screen name="Projects" component={Projects} options={{title:'Projects',gestureEnabled:true}}/>
+          <Stack.Screen name="Profile" component={Profile} options={{title:'Profile',gestureEnabled:true}}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   )
 
 }

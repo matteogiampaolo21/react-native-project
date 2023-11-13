@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState }from 'react'
 import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar, ScrollView } from 'react-native';
 
 
@@ -21,28 +21,34 @@ const tempData = [
 ]
 
 const Project = ({projectName,users,tasks}) => {
+    
     return(
-        <View>
-            <Text>{projectName}</Text>
-            <Text>User : {users.size}</Text>
-            <Text>Tasks : {tasks}</Text>
+        <View style={styles.project}>
+            <Text style={{color:'white',fontSize:17}}>{projectName}</Text>
+            <Text style={{color:'#d4d4d4',fontSize:15}}>User : {users.length}</Text>
+            <Text style={{color:'#d4d4d4',fontSize:15}}>Tasks : {tasks}</Text>
         </View>
     )
 }
 
 export const Projects = ({navigation}) => {
-  return (
-    <SafeAreaView style={styles.wrapper}>
-        <ScrollView>
-            <Text style={styles.header}>Projects.</Text>
-            <FlatList
-                data={tempData}
-                renderItem={({item}) => <Project projectName={item.projectName} users={item.users} tasks={item.tasks} />}
-                scrollEnabled={false}
-            />
-        </ScrollView>
-    </SafeAreaView>
-  )
+    const [projects,setProjects] = useState([])
+
+    useEffect(()=>{
+
+    },[])
+
+    return (
+        <SafeAreaView style={styles.wrapper}>
+            <ScrollView>
+                <FlatList
+                    data={projects}
+                    renderItem={({item}) => <Project projectName={item.projectName} users={item.users} tasks={item.tasks} />}
+                    scrollEnabled={false}
+                />
+            </ScrollView>
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -55,5 +61,12 @@ const styles = StyleSheet.create({
         fontSize:20,
         color:'white',
         fontWeight:'500',
-    }
+    },
+    project:{
+        backgroundColor:'#404040',
+        marginVertical:10,
+        marginHorizontal:10,
+        padding:10,
+        borderRadius:3,
+    },
 })
