@@ -1,14 +1,44 @@
-import React from 'react'
-import { StyleSheet,SafeAreaView,StatusBar,ScrollView,Image,Text, Button, View, TouchableOpacity } from 'react-native'
+import React, {useState} from 'react'
+import { StyleSheet,SafeAreaView,StatusBar,ScrollView,Image,Text,TextInput, Button, View, TouchableOpacity } from 'react-native'
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 export const Signin = ({ navigation }) => {
     
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    
+    const handleSignin = () => {
+        
+    }
+
     return(
         <SafeAreaView style={styles.wrapper}>
             <StatusBar/>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text>hello</Text>
+               <ScrollView >
+                <View style={styles.article}>
+                    <Text style={{color:'white',fontSize:18,fontWeight:500}}>Email:</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setEmail}
+                        placeholder='Enter a name'
+                        placeholderTextColor="#737373"
+                        value={email}
+                    />
+                    <Text style={{color:'white',fontSize:18,fontWeight:500}}>Password:</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setPassword}
+                        placeholder='Enter a name'
+                        placeholderTextColor="#737373"
+                        value={password}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={handleSignin}>
+                        <Text style={styles.btnText}>Sign in</Text>
+                    </TouchableOpacity>
+                </View>
+                
+            </ScrollView> 
                 
             </ScrollView>
         </SafeAreaView>
@@ -22,34 +52,34 @@ const styles = StyleSheet.create({
         backgroundColor:"#262626",
         
     },
-    scrollContainer:{
-        flex:1,
-        alignItems:'center',
-        paddingVertical:'auto',
-        justifyContent:'center'
-    },
-    image:{
-        width:200,
-        height:200,
-        alignSelf:'center'
-    },
-    header:{
-        color:'white',
-        fontSize:24,
-        marginTop:10,
-        textAlign:"center"
-    },
-    buttonContainer:{
-        marginTop:10,
-        paddingHorizontal:10,
-        paddingVertical:5,
-        width:200,
+    input:{
+        backgroundColor:"#262626",
+        color:'#f5f5f5',
+        paddingHorizontal:5,
+        paddingVertical:3,
+        marginVertical:10,
         borderRadius:2,
-        backgroundColor:'#0284c7',
+        fontSize:16
     },
-    buttonText:{
-        fontSize:18,
+    article:{
+        backgroundColor:"#404040",
+        padding:15,
+        marginTop:20,
+        marginHorizontal:20,
+        borderRadius:3,
+    },
+    button:{
+        backgroundColor:"#0ea5e9",
+        paddingHorizontal:5,
+        paddingVertical:6,
+        marginTop:15,
+        borderRadius:3,
+    },
+    btnText:{
+        fontSize:17,
         color:'white',
+        fontWeight:'400',
         textAlign:'center',
+
     }
 })

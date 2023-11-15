@@ -3,9 +3,10 @@ import React,{ useEffect, useState, useLayoutEffect} from 'react';
 import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from './firebase/firebaseConfig';
 import * as NavigationBar from 'expo-navigation-bar';
+
+import { auth, onAuthStateChanged } from './firebase/firebaseConfig';
+
 import { Home } from './src/screens/Home';
 import { Create } from './src/screens/Create';
 import { Projects } from './src/screens/Projects';
@@ -28,9 +29,11 @@ export default function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-
+        setLogState(true)
+        console.log(uid)
       } else {
-
+        console.log(user)
+        setLogState(false)
       }
     });
   },[auth])
