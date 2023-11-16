@@ -14,6 +14,7 @@ export const Register = ({ navigation }) => {
         createUserWithEmailAndPassword(auth,email,password).then((userCredential) => {
             const user = userCredential.user;
             user.displayName = username;
+            navigation.navigate("Signin");
         }).catch((err) => {
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -30,6 +31,8 @@ export const Register = ({ navigation }) => {
                         style={styles.input}
                         onChangeText={setUsername}
                         placeholder='Enter a name'
+                        autoCapitalize='none'
+                        autoCorrect={false}
                         placeholderTextColor="#737373"
                         value={username}
                     />
@@ -37,7 +40,10 @@ export const Register = ({ navigation }) => {
                     <TextInput
                         style={styles.input}
                         onChangeText={setEmail}
-                        placeholder='Enter a name'
+                        placeholder='Enter an email'
+                        keyboardType='emai-address'
+                        autoCapitalize='none'
+                        autoCorrect={false}
                         placeholderTextColor="#737373"
                         value={email}
                     />
@@ -45,7 +51,8 @@ export const Register = ({ navigation }) => {
                     <TextInput
                         style={styles.input}
                         onChangeText={setPassword}
-                        placeholder='Enter a name'
+                        placeholder='Enter a password'
+                        secureTextEntry={true}
                         placeholderTextColor="#737373"
                         value={password}
                     />

@@ -1,9 +1,21 @@
 import React from 'react'
 import { StyleSheet,SafeAreaView,StatusBar,ScrollView,Image,Text, Button, View, TouchableOpacity } from 'react-native'
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { auth } from '../../firebase/firebaseConfig';
+import { signOut } from 'firebase/auth';
+
 
 export const Home = ({ navigation }) => {
     
+
+    const handleLogOut = () => {
+        signOut(auth).then(() => {
+            navigation.navigate('LoggedOut')
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
     return(
         <SafeAreaView style={styles.wrapper}>
             <StatusBar/>
@@ -21,6 +33,9 @@ export const Home = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Profile')}>
                     <Text style={styles.buttonText}>View Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonContainer} onPress={handleLogOut}>
+                    <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>

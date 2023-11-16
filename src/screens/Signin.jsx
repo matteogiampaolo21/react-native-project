@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
-import { StyleSheet,SafeAreaView,StatusBar,ScrollView,Image,Text,TextInput, Button, View, TouchableOpacity } from 'react-native'
+import { StyleSheet,SafeAreaView,StatusBar,ScrollView,Image,Alert, Text,TextInput, Button, View, TouchableOpacity } from 'react-native'
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase/firebaseConfig';
+
 
 export const Signin = ({ navigation }) => {
     
@@ -8,7 +11,19 @@ export const Signin = ({ navigation }) => {
     const [password, setPassword] = useState("")
     
     const handleSignin = () => {
-        
+        signInWithEmailAndPassword(auth,email,password).then((userCredentials) => {
+            const users = userCredentials.user;
+            navigation.navigate("Home")
+        }).catch((error) => {
+            Alert.alert('Something went wrong','Please try again',[
+                {
+                    text:"Ok",
+                    onPress: () => console.log("Pressed Ok"),
+                }
+            ])
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        })
     }
 
     return(
@@ -21,7 +36,10 @@ export const Signin = ({ navigation }) => {
                     <TextInput
                         style={styles.input}
                         onChangeText={setEmail}
-                        placeholder='Enter a name'
+                        placeholder='Enter your email'
+                        keyboardType='emai-address'
+                        autoCapitalize='none'
+                        autoCorrect={false}
                         placeholderTextColor="#737373"
                         value={email}
                     />
@@ -29,7 +47,10 @@ export const Signin = ({ navigation }) => {
                     <TextInput
                         style={styles.input}
                         onChangeText={setPassword}
-                        placeholder='Enter a name'
+                        placeholder='Enter your password'
+                        autoCapitalize='none'
+                        secureTextEntry={true}
+                        autoCorrect={false}
                         placeholderTextColor="#737373"
                         value={password}
                     />
