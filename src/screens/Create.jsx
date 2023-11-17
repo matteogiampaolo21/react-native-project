@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { StyleSheet,SafeAreaView,View,FlatList,Button,TouchableOpacity,TextInput,Text,StatusBar, ScrollView } from 'react-native';
 import { db } from '../../firebase/firebaseConfig';
 import { collection , addDoc } from '@firebase/firestore';
 
+export const Create = ({route,navigation}) => {
 
-export const Create = ({navigation}) => {
+    const [projectName, setName] = useState("");
+    const {userEmail} = route.params;
 
-    const [projectName, setName] = useState("")
 
     const handleClick = async () => {
         
-        const doc = await addDoc(collection(db,"projects"),{name:projectName, users:[], tasks:0});
+        const doc = await addDoc(collection(db,"projects"),{name:projectName, users:[userEmail], tasks:0});
         console.log("Sent document:",doc)
     }
 

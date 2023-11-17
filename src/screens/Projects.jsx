@@ -1,5 +1,5 @@
 import React, { useEffect, useState }from 'react'
-import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar, ScrollView } from 'react-native';
+import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar, ScrollView, TouchableOpacity } from 'react-native';
 import { db } from '../../firebase/firebaseConfig';
 import {getDocs, collection} from "firebase/firestore";
 
@@ -22,13 +22,13 @@ const tempData = [
     },
 ]
 
-const Project = ({projectName,users,tasks}) => { 
+const Project = ({projectName,users,tasks,navigation}) => { 
     return(
-        <View style={styles.project}>
+        <TouchableOpacity onPress={() => {navigation.navigate("Project",{projectName:projectName})}} style={styles.project}>
             <Text style={{color:'white',fontSize:17}}>{projectName}</Text>
             <Text style={{color:'#d4d4d4',fontSize:15}}>User : {users.length}</Text>
             <Text style={{color:'#d4d4d4',fontSize:15}}>Tasks : {tasks}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -56,7 +56,7 @@ export const Projects = ({navigation}) => {
             <ScrollView>
                 <FlatList
                     data={projects}
-                    renderItem={({item}) => <Project projectName={item.name} users={item.users} tasks={item.tasks} />}
+                    renderItem={({item}) => <Project projectName={item.name} users={item.users} tasks={item.tasks} navigation={navigation} />}
                     scrollEnabled={false}
                     keyExtractor={item => item.id}
                 />

@@ -10,6 +10,7 @@ import { auth, onAuthStateChanged } from './firebase/firebaseConfig';
 import { Home } from './src/screens/Home';
 import { Create } from './src/screens/Create';
 import { Projects } from './src/screens/Projects';
+import { Project } from './src/screens/Project';
 import { Profile } from './src/screens/Profile';
 import { LoggedOut } from './src/screens/LoggedOut';
 import { Register } from './src/screens/Register';
@@ -18,7 +19,8 @@ import { Signin } from './src/screens/Signin';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [isLoggedIn , setLogState] = useState(false)
+  const [isLoggedIn , setLogState] = useState(true)
+  // True for now for faster development
 
   useLayoutEffect(()=>{
     const myFunc = async () => {
@@ -26,16 +28,16 @@ export default function App() {
     }
     myFunc();
     
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setLogState(true)
-        console.log(uid)
-      } else {
-        console.log(user)
-        setLogState(false)
-      }
-    });
+    // onAuthStateChanged(auth, (user) => {
+    //   if (user) {
+    //     const uid = user.uid;
+    //     setLogState(true)
+    //     console.log(uid)
+    //   } else {
+    //     console.log(user)
+    //     setLogState(false)
+    //   }
+    // });
   },[auth])
 
   
@@ -48,10 +50,11 @@ export default function App() {
           <Stack.Screen name="Create" component={Create} options={{title:'Create Project',gestureEnabled:true}}/>
           <Stack.Screen name="Projects" component={Projects} options={{title:'Projects',gestureEnabled:true}}/>
           <Stack.Screen name="Profile" component={Profile} options={{title:'Profile',gestureEnabled:true}}/>
+          <Stack.Screen name="Project" component={Project} options={({route}) => ({title:route.params.projectName,gestureEnabled:true})}/>
 
           <Stack.Screen name="LoggedOut" component={LoggedOut} options={{title:'Login',gestureEnabled:true,headerShown:false}}/>
           <Stack.Screen name="Register" component={Register} options={{title:'Register',gestureEnabled:true}}/>
-          <Stack.Screen name="Signin" component={Signin} options={{title:'Signin',gestureEnabled:true}}/>
+          <Stack.Screen name="Signin" component={Signin} options={{title:'Sign In',gestureEnabled:true}}/>
 
         </Stack.Navigator>
       </NavigationContainer>

@@ -1,12 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet,SafeAreaView,StatusBar,ScrollView,Image,Text, Button, View, TouchableOpacity } from 'react-native'
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { auth } from '../../firebase/firebaseConfig';
 import { signOut } from 'firebase/auth';
+import { onAuthStateChanged } from '../../firebase/firebaseConfig';
 
 
 export const Home = ({ navigation }) => {
+
+    const [user,setUser] = useState(null)
     
+    // useEffect(() => {
+    //     onAuthStateChanged(auth, (user) => {
+    //         if (user){  
+    //             setUser(user)
+    //         }else{
+    //             navigation.navigate('LoggedOut')
+    //         }
+    //     })
+    // },[auth])
 
     const handleLogOut = () => {
         signOut(auth).then(() => {
@@ -25,7 +37,7 @@ export const Home = ({ navigation }) => {
                     source={require("../../assets/adaptive-icon.png")}
                 />
                 <Text style={styles.header}>Task Manager</Text>
-                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Create')}>
+                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Create',{userEmail:user.email})}>
                     <Text style={styles.buttonText}>Create Projects</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Projects')}>

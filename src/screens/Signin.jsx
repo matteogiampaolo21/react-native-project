@@ -37,7 +37,7 @@ export const Signin = ({ navigation }) => {
                         style={styles.input}
                         onChangeText={setEmail}
                         placeholder='Enter your email'
-                        keyboardType='emai-address'
+                        keyboardType='email-address'
                         autoCapitalize='none'
                         autoCorrect={false}
                         placeholderTextColor="#737373"
