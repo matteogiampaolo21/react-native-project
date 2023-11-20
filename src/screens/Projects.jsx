@@ -22,9 +22,9 @@ const tempData = [
     },
 ]
 
-const Project = ({projectName,users,tasks,navigation}) => { 
+const Project = ({projectName,users,tasks,id,navigation}) => { 
     return(
-        <TouchableOpacity onPress={() => {navigation.navigate("Project",{projectName:projectName})}} style={styles.project}>
+        <TouchableOpacity onPress={() => {navigation.navigate("Project",{projectName:projectName,projectID:id})}} style={styles.project}>
             <Text style={{color:'white',fontSize:17}}>{projectName}</Text>
             <Text style={{color:'#d4d4d4',fontSize:15}}>User : {users.length}</Text>
             <Text style={{color:'#d4d4d4',fontSize:15}}>Tasks : {tasks}</Text>
@@ -56,7 +56,7 @@ export const Projects = ({navigation}) => {
             <ScrollView>
                 <FlatList
                     data={projects}
-                    renderItem={({item}) => <Project projectName={item.name} users={item.users} tasks={item.tasks} navigation={navigation} />}
+                    renderItem={({item}) => <Project projectName={item.name} users={item.users} tasks={item.tasks} id={item.id} navigation={navigation} />}
                     scrollEnabled={false}
                     keyExtractor={item => item.id}
                 />

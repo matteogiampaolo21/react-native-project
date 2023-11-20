@@ -10,15 +10,15 @@ export const Home = ({ navigation }) => {
 
     const [user,setUser] = useState(null)
     
-    // useEffect(() => {
-    //     onAuthStateChanged(auth, (user) => {
-    //         if (user){  
-    //             setUser(user)
-    //         }else{
-    //             navigation.navigate('LoggedOut')
-    //         }
-    //     })
-    // },[auth])
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user){  
+                setUser(user)
+            }else{
+                navigation.navigate('LoggedOut')
+            }
+        })
+    },[auth])
 
     const handleLogOut = () => {
         signOut(auth).then(() => {

@@ -1,70 +1,130 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Dimensions, TextInput,  } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Dimensions, TextInput, Keyboard,TouchableWithoutFeedback, FlatList  } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { db } from '../../firebase/firebaseConfig';
+import { collection,addDoc,getDocs } from 'firebase/firestore';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export const Project = ({route}) => {
+const Tasks = ({title,body,priority}) => {
+    return (
+        <View style={{backgroundColor:"#404040", marginTop:20,marginHorizontal:20, paddingVertical:5,paddingHorizontal:10,borderRadius:5,borderWidth:1,}}>
+            <Text style={{color:'white',fontSize:17}}>{title}</Text>
+            <Text style={{color:'#d4d4d4',fontSize:15}}>Priority : {priority}</Text>
+            <Text style={{color:'#d4d4d4',fontSize:15}}>{body}</Text>
+        </View>
+    )
+}
 
+export const Project = ({route}) => {
+    const {projectID} = route.params;
     const [title,setTitle] = useState("");
     const [body,setBody] = useState("");
+    const [isHidden,setHidden] = useState(true)
+
+
+    const [tasks,setTasks] = useState([])
+
+    useEffect(()=>{
+        
+        const getProjects = async () => {        
+            const querySnapshot = await getDocs(collection(db, "tasks"));
+            const tempArray = []
+            querySnapshot.forEach((doc) => {
+                const tempObj = doc.data();
+                tempObj.id = doc.id;
+                tempArray.push(tempObj)
+                // doc.data() is never undefined for query doc snapshot
+            });
+            setTasks(tempArray);
+        }
+        getProjects();
+    },[])
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
-        {label: 'Apple', value: 'apple'},
-        {label: 'Banana', value: 'banana'}
+        {label: 'Critical', value: 'Critical'},
+        {label: 'High', value: 'High'},
+        {label: 'Normal', value: 'Normal'},
+        {label: 'Low', value: 'Low'},
     ]);
 
-    const createTask = () => {
-
+    const createTask = async () => {
+        const doc = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID});
+        console.log("Sent document:",doc)
+        setTasks(prev => [...prev,{title:title, body:body, priority:value,projectID:projectID}])
     }
     return (
         <SafeAreaView style={styles.wrapper}>
-            <View style={styles.article}>
-                <Text style={{color:'white',fontSize:18,fontWeight:500}}>Title:</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setTitle}
-                    placeholder='Enter a title'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    placeholderTextColor="#737373"
-                    value={title}
-                />
-
-                <Text style={{color:'white',fontSize:18,fontWeight:500}}>Body:</Text>
-                <TextInput
-                    editable
-                    multiline
-                    numberOfLines={5}
-                    onChangeText={text => setBody(text)}
-                    placeholder='Enter a body'
-                    placeholderTextColor={"#737373"}
-                    value={body}
-                    style={styles.input}
-                />
+            <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}  >
+                {/* Needs outer view for keyboard dismiss to work properly. */}
 
 
-                <Text style={{color:'white',fontSize:18,fontWeight:500}}>Priority:</Text>
-                <DropDownPicker
-                    open={open}
-                    value={value}
-                    items={items}
-                    setOpen={setOpen}
-                    setValue={setValue}
-                    setItems={setItems}
-                    style={{backgroundColor:'#262626',borderRadius:2,marginTop:10}}
-                    textStyle={{color:'white'}}
-                    dropDownContainerStyle={{backgroundColor:'black'}}
-                    
-                />
-                
-                <TouchableOpacity style={styles.button} onPress={createTask}>
-                    <Text style={styles.btnText}>Create</Text>
-                </TouchableOpacity>
-            </View>
-            <ScrollView>
-                
-            </ScrollView>
+                { isHidden ? 
+                    <TouchableOpacity onPress={()=>{setHidden(false)}} style={styles.hideBtn}>
+                        <Text style={{color:'white',fontSize:17,textAlign:'center'}}>Create Task</Text>
+                    </TouchableOpacity>
+                :
+                    <View >
+
+                        <View style={styles.article}>
+                            
+                            <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+                                <Text style={{color:'white',fontSize:18,fontWeight:500}}>Title:</Text>
+                                <Text onPress={() => {setHidden(true)}} style={{color:'#a3a3a3',fontSize:16,fontWeight:400,}}>Hide</Text>
+                            </View>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={setTitle}
+                                placeholder='Enter a title'
+                                placeholderTextColor="#737373"
+                                value={title}
+                            />
+
+                            <Text style={{color:'white',fontSize:18,fontWeight:500}}>Priority:</Text>
+                            <DropDownPicker
+                                open={open}
+                                value={value}
+                                items={items}
+                                setOpen={setOpen}
+                                setValue={setValue}
+                                setItems={setItems}
+                                placeholder='Select a priority'
+                                placeholderStyle={{color:"#737373"}}
+                                style={{backgroundColor:'#262626',borderRadius:2,marginTop:10}}
+                                textStyle={{color:'white'}}
+                                nestedScrollEnabled={true} 
+                                dropDownContainerStyle={{backgroundColor:'black'}}
+                                
+                            />
+                            <Text style={{color:'white',fontSize:18,fontWeight:500,marginTop:10}}>Body:</Text>
+                            <TextInput
+                                editable
+                                multiline
+                                numberOfLines={5}
+                                onChangeText={text => setBody(text)}
+                                placeholder='Enter a body'
+                                placeholderTextColor={"#737373"}
+                                onEndEditing={() => {Keyboard.dismiss()}}
+                                value={body}
+                                style={styles.inputArea}
+                            />
+
+
+                        
+                            <TouchableOpacity style={styles.button} onPress={createTask}>
+                                <Text style={styles.btnText}>Create</Text>
+                            </TouchableOpacity>
+                            
+                        </View>
+                    </View>
+                }
+            
+            </TouchableWithoutFeedback>
+            <FlatList
+                data={tasks}
+                renderItem={({item}) => <Tasks title={item.title} body={item.body} priority={item.priority} />}
+                keyExtractor={item => item.id}
+            />
         </SafeAreaView>
     )
 }
@@ -89,6 +149,16 @@ const styles = StyleSheet.create({
         marginTop:20,
         marginHorizontal:20,
         borderRadius:3,
+        borderWidth:1,
+        zIndex:50
+    },
+    hideBtn:{
+        backgroundColor:"#0ea5e9",
+        paddingHorizontal:5,
+        paddingVertical:6,
+        marginTop:15,
+        borderRadius:3,
+        marginHorizontal:20,
     },
     button:{
         backgroundColor:"#0ea5e9",
