@@ -41,7 +41,7 @@ export const Register = ({ navigation }) => {
                         style={styles.input}
                         onChangeText={setEmail}
                         placeholder='Enter an email'
-                        keyboardType='emai-address'
+                        keyboardType='email-address'
                         autoCapitalize='none'
                         autoCorrect={false}
                         placeholderTextColor="#737373"

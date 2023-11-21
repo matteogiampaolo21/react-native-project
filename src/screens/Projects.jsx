@@ -1,26 +1,8 @@
 import React, { useEffect, useState }from 'react'
-import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet,SafeAreaView,FlatList,Text,ScrollView, TouchableOpacity } from 'react-native';
 import { db } from '../../firebase/firebaseConfig';
-import {getDocs, collection} from "firebase/firestore";
+import {getDocs, collection, query, where} from "firebase/firestore";
 
-
-const tempData = [
-    { 
-        projectName: "Project Bravo",
-        users: new Set().add('test_user_001'),
-        tasks: 0,
-    },
-    { 
-        projectName: "Project Charlie",
-        users: new Set().add('test_user_001'),
-        tasks: 0,
-    },
-    { 
-        projectName: "Project Delta",
-        users: new Set().add('test_user_001').add('test_user_002'),
-        tasks: 0,
-    },
-]
 
 const Project = ({projectName,users,tasks,id,navigation}) => { 
     return(
@@ -32,19 +14,24 @@ const Project = ({projectName,users,tasks,id,navigation}) => {
     )
 }
 
-export const Projects = ({navigation}) => {
+export const Projects = ({route,navigation}) => {
     const [projects,setProjects] = useState([])
+
+    const {userEmail} = route.params
+
 
     useEffect(()=>{
         
-        const getProjects = async () => {        
-            const querySnapshot = await getDocs(collection(db, "projects"));
+        const getProjects = async () => {      
+            // Get projects related to the specific user  
+
+            const q = query(collection(db, "projects"), where("users", "array-contains", userEmail));
+            const querySnapshot = await getDocs(q);
             const tempArray = []
             querySnapshot.forEach((doc) => {
-                const tempObj = doc.data();
-                tempObj.id = doc.id;
-                tempArray.push(tempObj)
-                // doc.data() is never undefined for query doc snapshot
+                let tempObj = doc.data()
+                tempObj.id = doc.id
+                tempArray.push(tempObj);
             });
             setProjects(tempArray);
         }

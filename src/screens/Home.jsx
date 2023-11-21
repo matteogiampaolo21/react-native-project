@@ -40,7 +40,7 @@ export const Home = ({ navigation }) => {
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Create',{userEmail:user.email})}>
                     <Text style={styles.buttonText}>Create Projects</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Projects')}>
+                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Projects',{userEmail:user.email})}>
                     <Text style={styles.buttonText}>View Projects</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Profile')}>

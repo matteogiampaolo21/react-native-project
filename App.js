@@ -1,6 +1,6 @@
 
 import React,{ useEffect, useState, useLayoutEffect} from 'react';
-import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar } from 'react-native';
+import { StyleSheet,SafeAreaView,View,Button, FlatList,Text,StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -50,7 +50,7 @@ export default function App() {
           <Stack.Screen name="Create" component={Create} options={{title:'Create Project',gestureEnabled:true}}/>
           <Stack.Screen name="Projects" component={Projects} options={{title:'Projects',gestureEnabled:true}}/>
           <Stack.Screen name="Profile" component={Profile} options={{title:'Profile',gestureEnabled:true}}/>
-          <Stack.Screen name="Project" component={Project} options={({route}) => ({title:route.params.projectName,gestureEnabled:true})}/>
+          <Stack.Screen name="Project" component={Project} options={({route}) => ({title:route.params.projectName,gestureEnabled:true,})}/>
 
           <Stack.Screen name="LoggedOut" component={LoggedOut} options={{title:'Login',gestureEnabled:true,headerShown:false}}/>
           <Stack.Screen name="Register" component={Register} options={{title:'Register',gestureEnabled:true}}/>

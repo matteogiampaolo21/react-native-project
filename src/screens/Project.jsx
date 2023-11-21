@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Dimensions, TextInput, Keyboard,TouchableWithoutFeedback, FlatList  } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { db } from '../../firebase/firebaseConfig';
-import { collection,addDoc,getDocs } from 'firebase/firestore';
+import { collection,addDoc,getDocs,query, where, doc,updateDoc } from 'firebase/firestore';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const Tasks = ({title,body,priority}) => {
@@ -18,27 +18,6 @@ export const Project = ({route}) => {
     const {projectID} = route.params;
     const [title,setTitle] = useState("");
     const [body,setBody] = useState("");
-    const [isHidden,setHidden] = useState(true)
-
-
-    const [tasks,setTasks] = useState([])
-
-    useEffect(()=>{
-        
-        const getProjects = async () => {        
-            const querySnapshot = await getDocs(collection(db, "tasks"));
-            const tempArray = []
-            querySnapshot.forEach((doc) => {
-                const tempObj = doc.data();
-                tempObj.id = doc.id;
-                tempArray.push(tempObj)
-                // doc.data() is never undefined for query doc snapshot
-            });
-            setTasks(tempArray);
-        }
-        getProjects();
-    },[])
-
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
@@ -47,11 +26,48 @@ export const Project = ({route}) => {
         {label: 'Normal', value: 'Normal'},
         {label: 'Low', value: 'Low'},
     ]);
+    const [isHidden,setHidden] = useState(true)
+
+
+    const [tasks,setTasks] = useState([])
+
+    useEffect(()=>{
+        
+        const getTasks = async () => {
+            // Get specific tasks related to project. 
+            const q = query(collection(db, "tasks"), where("projectID", "==", projectID));
+
+            const querySnapshot = await getDocs(q);
+            const tempArray = []
+            querySnapshot.forEach((doc) => {
+                let tempObj = doc.data();
+                tempObj.id = doc.id;
+                tempArray.push(tempObj);
+            });
+            setTasks(tempArray);
+        }
+        getTasks();
+    },[])
+
 
     const createTask = async () => {
-        const doc = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID});
+        // add doc to database
+        const document = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID,isCompleted:false});
         console.log("Sent document:",doc)
-        setTasks(prev => [...prev,{title:title, body:body, priority:value,projectID:projectID}])
+
+        // Update the frontend without refresh
+        setTasks(prev => [...prev,{id:doc.id,title:title, body:body, priority:value,projectID:projectID}]);
+
+        // Clear form
+        setTitle("");
+        setBody("");
+        setValue(null);
+
+        // Update project's task value
+        const projectRef = doc(db,'projects',projectID);
+        await updateDoc(projectRef, {
+            tasks: tasks.length,
+        })
     }
     return (
         <SafeAreaView style={styles.wrapper}>
