@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Dimensions, TextInput, Keyboard,TouchableWithoutFeedback, FlatList  } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,Button, ScrollView, TouchableOpacity, Dimensions, TextInput, Keyboard,TouchableWithoutFeedback, FlatList  } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { db } from '../../firebase/firebaseConfig';
 import { collection,addDoc,getDocs,query, where, doc,updateDoc } from 'firebase/firestore';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { AntDesign } from '@expo/vector-icons';
 
 const Tasks = ({title,body,priority}) => {
     return (
@@ -14,8 +15,9 @@ const Tasks = ({title,body,priority}) => {
     )
 }
 
-export const Project = ({route}) => {
-    const {projectID} = route.params;
+export const Project = ({route,navigation}) => {
+
+    const {projectID,accessControl} = route.params;
     const [title,setTitle] = useState("");
     const [body,setBody] = useState("");
     const [open, setOpen] = useState(false);
@@ -141,6 +143,18 @@ export const Project = ({route}) => {
                 renderItem={({item}) => <Tasks title={item.title} body={item.body} priority={item.priority} />}
                 keyExtractor={item => item.id}
             />
+
+            {accessControl ?
+                <View style={{flex:1,marginRight:20,marginBottom:20,}}>
+                    <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,alignSelf:'flex-end'}}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Access Control")} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
+                            <AntDesign style={{}} name="bars" size={30} color="#a3a3a3" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            :
+                <></>
+            }
         </SafeAreaView>
     )
 }

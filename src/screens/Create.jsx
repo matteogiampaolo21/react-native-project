@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { StyleSheet,SafeAreaView,View,FlatList,Button,TouchableOpacity,TextInput,Text,StatusBar, ScrollView } from 'react-native';
 import { db } from '../../firebase/firebaseConfig';
 import { collection , addDoc } from '@firebase/firestore';
@@ -11,7 +11,7 @@ export const Create = ({route,navigation}) => {
 
     const handleClick = async () => {
         
-        const doc = await addDoc(collection(db,"projects"),{name:projectName, users:[userEmail], tasks:0});
+        const doc = await addDoc(collection(db,"projects"),{name:projectName, users:[{email:userEmail,role:'o wner'}], tasks:0});
         console.log("Sent document:",doc)
     }
 
