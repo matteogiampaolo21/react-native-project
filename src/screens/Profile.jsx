@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet,SafeAreaView,View,FlatList,Text,StatusBar, ScrollView } from 'react-native';
+import { StyleSheet,SafeAreaView,View,Text,ScrollView } from 'react-native';
 
 export const Profile = ({navigation}) => {
   return (

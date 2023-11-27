@@ -1,6 +1,6 @@
 
 import React,{ useEffect, useState, useLayoutEffect} from 'react';
-import { StyleSheet,SafeAreaView,View,Button, FlatList,Text,StatusBar } from 'react-native';
+import { StyleSheet,SafeAreaView,View,Button, Text,StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -15,7 +15,8 @@ import { Profile } from './src/screens/Profile';
 import { LoggedOut } from './src/screens/LoggedOut';
 import { Register } from './src/screens/Register';
 import { Signin } from './src/screens/Signin';
-import { AccessControl } from './src/screens/AccessControl';
+import { AddUserPanel } from './src/screens/AddUserPanel';
+import { AccessPanel } from './src/screens/AccessPanel';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,7 +59,8 @@ export default function App() {
               gestureEnabled:true,
             })}
           />
-          <Stack.Screen name="Access Control" component={AccessControl} options={{title:'Access Control',gestureEnabled:true}}/>
+          <Stack.Screen name="User Panel" component={AddUserPanel} options={{title:'User Panel',gestureEnabled:true}}/>
+          <Stack.Screen name="Access Panel" component={AccessPanel} options={{title:'Access Panel',gestureEnabled:true}}/>
 
           <Stack.Screen name="Profile" component={Profile} options={{title:'Profile',gestureEnabled:true}}/>
 

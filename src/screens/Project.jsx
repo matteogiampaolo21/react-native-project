@@ -4,16 +4,8 @@ import { db } from '../../firebase/firebaseConfig';
 import { collection,addDoc,getDocs,query, where, doc,updateDoc } from 'firebase/firestore';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { AntDesign } from '@expo/vector-icons';
+import { Task } from '../components/Task';
 
-const Tasks = ({title,body,priority}) => {
-    return (
-        <View style={{backgroundColor:"#404040", marginTop:20,marginHorizontal:20, paddingVertical:5,paddingHorizontal:10,borderRadius:5,borderWidth:1,}}>
-            <Text style={{color:'white',fontSize:17}}>{title}</Text>
-            <Text style={{color:'#d4d4d4',fontSize:15}}>Priority : {priority}</Text>
-            <Text style={{color:'#d4d4d4',fontSize:15}}>{body}</Text>
-        </View>
-    )
-}
 
 export const Project = ({route,navigation}) => {
 
@@ -140,15 +132,20 @@ export const Project = ({route,navigation}) => {
             </TouchableWithoutFeedback>
             <FlatList
                 data={tasks}
-                renderItem={({item}) => <Tasks title={item.title} body={item.body} priority={item.priority} />}
+                renderItem={({item}) => <Task title={item.title} body={item.body} priority={item.priority} />}
                 keyExtractor={item => item.id}
             />
 
             {accessControl ?
-                <View style={{flex:1,marginRight:20,marginBottom:20,}}>
+                <View style={{display:'flex',flexDirection:'row',justifyContent:'flex-end',marginRight:20,marginBottom:20,}}>
                     <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,alignSelf:'flex-end'}}>
-                        <TouchableOpacity onPress={() => navigation.navigate("Access Control")} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
+                        <TouchableOpacity onPress={() => navigation.navigate("User Panel",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
                             <AntDesign style={{}} name="bars" size={30} color="#a3a3a3" />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,right:70,alignSelf:'flex-end'}}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Access Panel",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
+                            <AntDesign style={{}} name="user" size={30} color="#a3a3a3" />
                         </TouchableOpacity>
                     </View>
                 </View>
