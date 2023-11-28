@@ -29,9 +29,11 @@ export const AccessPanel = ({route}) => {
             }
         }
         getProject();
-    },[])
+    },[project])
 
     
+    
+
 
     return (
         <SafeAreaView style={styles.wrapper}>
@@ -41,25 +43,27 @@ export const AccessPanel = ({route}) => {
                 <Text style={styles.userHeading}>Managers</Text>
                 <FlatList
                   data={project.managers}
-                  renderItem={({item}) => <UserRole user={item}/>}
+                  renderItem={({item}) => <UserRole user={item} role={"managers"} setProject={setProject} project={project}/>}
                   keyExtractor={item => item}
                   scrollEnabled={false}
+                  ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no managers.</Text>}
                   style={styles.usersContainer}
                 />
 
                 <Text style={styles.userHeading}>Workers</Text>
                 <FlatList
                   data={project.workers}
-                  renderItem={({item}) => <UserRole user={item}/>}
+                  renderItem={({item}) => <UserRole user={item} role={"workers"} setProject={setProject} project={project}/>}
                   keyExtractor={item => item}
                   scrollEnabled={false}
+                  ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no workers.</Text>}
                   style={styles.usersContainer}
                 />
                 
 
               </View>
             :
-              console.log("Something")
+              <View></View>
             }
           </ScrollView>
         </SafeAreaView>
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
         marginTop:10,
         marginHorizontal:10,
         backgroundColor:'#404040',
-        padding:10,
+        paddingHorizontal:10,
         paddingTop:7,
         borderRadius:5,
         borderWidth:1,
