@@ -1,5 +1,5 @@
 import React, { useEffect, useState }from 'react'
-import { StyleSheet,SafeAreaView,FlatList,Text,ScrollView, } from 'react-native';
+import { StyleSheet,SafeAreaView,FlatList,ActivityIndicator,ScrollView, } from 'react-native';
 import { db } from '../../firebase/firebaseConfig';
 import {getDocs, collection, query, where} from "firebase/firestore";
 import { ProjectComponent } from '../components/ProjectComponent';
@@ -7,6 +7,7 @@ import { ProjectComponent } from '../components/ProjectComponent';
 
 export const Projects = ({route,navigation}) => {
     const [projects,setProjects] = useState([])
+    const [isLoading,setLoading] = useState(true)
 
     const {userEmail} = route.params
 
@@ -25,21 +26,30 @@ export const Projects = ({route,navigation}) => {
                 tempArray.push(tempObj);
             });
             setProjects(tempArray);
+            setLoading(false)
         }
         getProjects();
     },[])
 
     return (
-        <SafeAreaView style={styles.wrapper}>
-            <ScrollView>
-                <FlatList
-                    data={projects}
-                    renderItem={({item}) => <ProjectComponent projectName={item.name} userEmail={userEmail} users={item.users} owner={item.owner} coOwners={item.coOwners} tasks={item.tasks} id={item.id} navigation={navigation} />}
-                    scrollEnabled={false}
-                    keyExtractor={item => item.id}
-                />
-            </ScrollView>
-        </SafeAreaView>
+        <>
+        {isLoading ?
+            <SafeAreaView style={{flex:1,justifyContent:'center',backgroundColor:"#262626"}}>
+                <ActivityIndicator size={'large'} color={"#0ea5e9"} />
+            </SafeAreaView>
+        :
+            <SafeAreaView style={styles.wrapper}>
+                <ScrollView>
+                    <FlatList
+                        data={projects}
+                        renderItem={({item}) => <ProjectComponent projectName={item.name} userEmail={userEmail} users={item.users} owner={item.owner} coOwners={item.coOwners} managers={item.managers} tasks={item.tasks} id={item.id} navigation={navigation} />}
+                        scrollEnabled={false}
+                        keyExtractor={item => item.id}
+                    />
+                </ScrollView>
+            </SafeAreaView>
+        }
+        </>
     )
 }
 

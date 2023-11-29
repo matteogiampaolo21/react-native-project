@@ -80,6 +80,8 @@ export const AddUserPanel = ({route}) => {
                       onChangeText={setEmail}
                       placeholder="Enter a user's email"
                       placeholderTextColor="#737373"
+                      autoCapitalize='none'
+                      autoCorrect={false}
                       value={email}
                       />
 

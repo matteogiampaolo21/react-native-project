@@ -11,7 +11,6 @@ import { Home } from './src/screens/Home';
 import { Create } from './src/screens/Create';
 import { Projects } from './src/screens/Projects';
 import { Project } from './src/screens/Project';
-import { Profile } from './src/screens/Profile';
 import { LoggedOut } from './src/screens/LoggedOut';
 import { Register } from './src/screens/Register';
 import { Signin } from './src/screens/Signin';
@@ -59,10 +58,8 @@ export default function App() {
               gestureEnabled:true,
             })}
           />
-          <Stack.Screen name="User Panel" component={AddUserPanel} options={{title:'User Panel',gestureEnabled:true}}/>
+          <Stack.Screen name="Add User" component={AddUserPanel} options={{title:'Add User',gestureEnabled:true}}/>
           <Stack.Screen name="Access Panel" component={AccessPanel} options={{title:'Access Panel',gestureEnabled:true}}/>
-
-          <Stack.Screen name="Profile" component={Profile} options={{title:'Profile',gestureEnabled:true}}/>
 
           <Stack.Screen name="LoggedOut" component={LoggedOut} options={{title:'Login',gestureEnabled:true,headerShown:false}}/>
           <Stack.Screen name="Register" component={Register} options={{title:'Register',gestureEnabled:true}}/>

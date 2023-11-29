@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView,Button, ScrollView, TouchableOpacity, Dimensions, TextInput, Keyboard,TouchableWithoutFeedback, FlatList  } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,Button, ScrollView, TouchableOpacity, Dimensions, TextInput, Keyboard,TouchableWithoutFeedback, FlatList, ActivityIndicator  } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { db } from '../../firebase/firebaseConfig';
 import { collection,addDoc,getDocs,query, where, doc,updateDoc } from 'firebase/firestore';
@@ -9,7 +9,9 @@ import { Task } from '../components/Task';
 
 export const Project = ({route,navigation}) => {
 
-    const {projectID,accessControl} = route.params;
+    const {projectID,accessControl,accessToCreate} = route.params;
+
+    console.log(accessControl,accessToCreate)
     const [title,setTitle] = useState("");
     const [body,setBody] = useState("");
     const [open, setOpen] = useState(false);
@@ -47,7 +49,7 @@ export const Project = ({route,navigation}) => {
     const createTask = async () => {
         // add doc to database
         const document = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID,isCompleted:false});
-        console.log("Sent document:",doc)
+        console.log("Sent document:",document)
 
         // Update the frontend without refresh
         setTasks(prev => [...prev,{id:doc.id,title:title, body:body, priority:value,projectID:projectID}]);
@@ -64,95 +66,106 @@ export const Project = ({route,navigation}) => {
         })
     }
     return (
-        <SafeAreaView style={styles.wrapper}>
-            <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}  >
-                {/* Needs outer view for keyboard dismiss to work properly. */}
+        <>
+        {tasks.length == 0 ?
+            <SafeAreaView style={{flex:1,justifyContent:'center',backgroundColor:"#262626"}}>
+                <ActivityIndicator size={'large'} color={"#0ea5e9"} />
+            </SafeAreaView>
+        :
+            <SafeAreaView style={styles.wrapper}>
+                <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}  >
 
+                    { accessControl || accessToCreate ?
+                        <>
+                            { isHidden ? 
+                                <TouchableOpacity onPress={()=>{setHidden(false)}} style={styles.hideBtn}>
+                                    <Text style={{color:'white',fontSize:17,textAlign:'center'}}>Create Task</Text>
+                                </TouchableOpacity>
+                            :
+                                <View >
+                                {/* Needs outer view for keyboard dismiss to work properly. */}
 
-                { isHidden ? 
-                    <TouchableOpacity onPress={()=>{setHidden(false)}} style={styles.hideBtn}>
-                        <Text style={{color:'white',fontSize:17,textAlign:'center'}}>Create Task</Text>
-                    </TouchableOpacity>
-                :
-                    <View >
+                                    <View style={styles.article}>
+                                        
+                                        <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+                                            <Text style={{color:'white',fontSize:18,fontWeight:500}}>Title:</Text>
+                                            <Text onPress={() => {setHidden(true)}} style={{color:'#a3a3a3',fontSize:16,fontWeight:400,}}>Hide</Text>
+                                        </View>
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={setTitle}
+                                            placeholder='Enter a title'
+                                            placeholderTextColor="#737373"
+                                            value={title}
+                                        />
 
-                        <View style={styles.article}>
-                            
-                            <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-                                <Text style={{color:'white',fontSize:18,fontWeight:500}}>Title:</Text>
-                                <Text onPress={() => {setHidden(true)}} style={{color:'#a3a3a3',fontSize:16,fontWeight:400,}}>Hide</Text>
-                            </View>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={setTitle}
-                                placeholder='Enter a title'
-                                placeholderTextColor="#737373"
-                                value={title}
-                            />
+                                        <Text style={{color:'white',fontSize:18,fontWeight:500}}>Priority:</Text>
+                                        <DropDownPicker
+                                            open={open}
+                                            value={value}
+                                            items={items}
+                                            setOpen={setOpen}
+                                            setValue={setValue}
+                                            setItems={setItems}
+                                            placeholder='Select a priority'
+                                            placeholderStyle={{color:"#737373"}}
+                                            style={{backgroundColor:'#262626',borderRadius:2,marginTop:10}}
+                                            textStyle={{color:'white'}}
+                                            nestedScrollEnabled={true} 
+                                            dropDownContainerStyle={{backgroundColor:'black'}}
+                                            
+                                        />
+                                        <Text style={{color:'white',fontSize:18,fontWeight:500,marginTop:10}}>Body:</Text>
+                                        <TextInput
+                                            editable
+                                            multiline
+                                            numberOfLines={5}
+                                            onChangeText={text => setBody(text)}
+                                            placeholder='Enter a body'
+                                            placeholderTextColor={"#737373"}
+                                            onEndEditing={() => {Keyboard.dismiss()}}
+                                            value={body}
+                                            style={styles.inputArea}
+                                        />
+                                    
+                                        <TouchableOpacity style={styles.button} onPress={createTask}>
+                                            <Text style={styles.btnText}>Create</Text>
+                                        </TouchableOpacity>
+                                        
+                                    </View>
+                                </View>
+                            }
+                        </>
+                    :
+                        <></>
+                    }
+                
+                </TouchableWithoutFeedback>
+                <FlatList
+                    data={tasks}
+                    renderItem={({item}) => <Task title={item.title} body={item.body} priority={item.priority} />}
+                    keyExtractor={item => item.id}
+                />
 
-                            <Text style={{color:'white',fontSize:18,fontWeight:500}}>Priority:</Text>
-                            <DropDownPicker
-                                open={open}
-                                value={value}
-                                items={items}
-                                setOpen={setOpen}
-                                setValue={setValue}
-                                setItems={setItems}
-                                placeholder='Select a priority'
-                                placeholderStyle={{color:"#737373"}}
-                                style={{backgroundColor:'#262626',borderRadius:2,marginTop:10}}
-                                textStyle={{color:'white'}}
-                                nestedScrollEnabled={true} 
-                                dropDownContainerStyle={{backgroundColor:'black'}}
-                                
-                            />
-                            <Text style={{color:'white',fontSize:18,fontWeight:500,marginTop:10}}>Body:</Text>
-                            <TextInput
-                                editable
-                                multiline
-                                numberOfLines={5}
-                                onChangeText={text => setBody(text)}
-                                placeholder='Enter a body'
-                                placeholderTextColor={"#737373"}
-                                onEndEditing={() => {Keyboard.dismiss()}}
-                                value={body}
-                                style={styles.inputArea}
-                            />
-
-
-                        
-                            <TouchableOpacity style={styles.button} onPress={createTask}>
-                                <Text style={styles.btnText}>Create</Text>
+                {accessControl ?
+                    <View style={{display:'flex',flexDirection:'row',justifyContent:'flex-end',marginRight:20,marginBottom:20,}}>
+                        <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,right:70,alignSelf:'flex-end'}}>
+                            <TouchableOpacity onPress={() => navigation.navigate("Access Panel",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
+                                <AntDesign style={{}} name="user" size={30} color="#a3a3a3" />
                             </TouchableOpacity>
-                            
+                        </View>
+                        <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,alignSelf:'flex-end'}}>
+                            <TouchableOpacity onPress={() => navigation.navigate("Add User",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
+                                <AntDesign style={{}} name="bars" size={30} color="#a3a3a3" />
+                            </TouchableOpacity>
                         </View>
                     </View>
+                :
+                    <></>
                 }
-            
-            </TouchableWithoutFeedback>
-            <FlatList
-                data={tasks}
-                renderItem={({item}) => <Task title={item.title} body={item.body} priority={item.priority} />}
-                keyExtractor={item => item.id}
-            />
-
-            {accessControl ?
-                <View style={{display:'flex',flexDirection:'row',justifyContent:'flex-end',marginRight:20,marginBottom:20,}}>
-                    <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,alignSelf:'flex-end'}}>
-                        <TouchableOpacity onPress={() => navigation.navigate("User Panel",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
-                            <AntDesign style={{}} name="bars" size={30} color="#a3a3a3" />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,right:70,alignSelf:'flex-end'}}>
-                        <TouchableOpacity onPress={() => navigation.navigate("Access Panel",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
-                            <AntDesign style={{}} name="user" size={30} color="#a3a3a3" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            :
-                <></>
-            }
-        </SafeAreaView>
+            </SafeAreaView>
+        }
+        </>
     )
 }
 
@@ -186,6 +199,7 @@ const styles = StyleSheet.create({
         marginTop:15,
         borderRadius:3,
         marginHorizontal:20,
+        
     },
     button:{
         backgroundColor:"#0ea5e9",

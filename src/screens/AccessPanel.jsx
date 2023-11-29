@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet,Keyboard, Text, TouchableOpacity,TouchableWithoutFeedback,TextInput, View, FlatList, ScrollView, } from 'react-native'
+import { SafeAreaView, StyleSheet,Keyboard,ActivityIndicator, Text, TouchableOpacity,TouchableWithoutFeedback,TextInput, View, FlatList, ScrollView, } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import React,{useEffect, useState} from 'react'
 import {doc,getDoc,updateDoc} from 'firebase/firestore';
@@ -36,37 +36,45 @@ export const AccessPanel = ({route}) => {
 
 
     return (
-        <SafeAreaView style={styles.wrapper}>
-          <ScrollView >
-            {project.owner ?
-              <View>
-                <Text style={styles.userHeading}>Managers</Text>
-                <FlatList
-                  data={project.managers}
-                  renderItem={({item}) => <UserRole user={item} role={"managers"} setProject={setProject} project={project}/>}
-                  keyExtractor={item => item}
-                  scrollEnabled={false}
-                  ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no managers.</Text>}
-                  style={styles.usersContainer}
-                />
+        <>
+        {project.owner ?
+          <SafeAreaView style={styles.wrapper}>
+            <ScrollView >
+              {project.owner ?
+                <View>
+                  <Text style={styles.userHeading}>Managers</Text>
+                  <FlatList
+                    data={project.managers}
+                    renderItem={({item}) => <UserRole user={item} role={"managers"} setProject={setProject} project={project}/>}
+                    keyExtractor={item => item}
+                    scrollEnabled={false}
+                    ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no managers.</Text>}
+                    style={styles.usersContainer}
+                  />
 
-                <Text style={styles.userHeading}>Workers</Text>
-                <FlatList
-                  data={project.workers}
-                  renderItem={({item}) => <UserRole user={item} role={"workers"} setProject={setProject} project={project}/>}
-                  keyExtractor={item => item}
-                  scrollEnabled={false}
-                  ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no workers.</Text>}
-                  style={styles.usersContainer}
-                />
-                
+                  <Text style={styles.userHeading}>Workers</Text>
+                  <FlatList
+                    data={project.workers}
+                    renderItem={({item}) => <UserRole user={item} role={"workers"} setProject={setProject} project={project}/>}
+                    keyExtractor={item => item}
+                    scrollEnabled={false}
+                    ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no workers.</Text>}
+                    style={styles.usersContainer}
+                  />
+                  
 
-              </View>
-            :
-              <View></View>
-            }
-          </ScrollView>
-        </SafeAreaView>
+                </View>
+              :
+                <View></View>
+              }
+            </ScrollView>
+          </SafeAreaView>
+        :
+          <SafeAreaView style={{flex:1,justifyContent:'center',backgroundColor:"#262626"}}>
+              <ActivityIndicator size={'large'} color={"#0ea5e9"} />
+          </SafeAreaView>
+        }
+        </>
     )
 }
 

@@ -43,9 +43,6 @@ export const Home = ({ navigation }) => {
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Projects',{userEmail:user.email})}>
                     <Text style={styles.buttonText}>View Projects</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('Profile')}>
-                    <Text style={styles.buttonText}>View Profile</Text>
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={handleLogOut}>
                     <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>

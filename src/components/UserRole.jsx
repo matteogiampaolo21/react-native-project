@@ -6,16 +6,16 @@ import {doc,updateDoc, getDoc} from 'firebase/firestore';
 
 export const UserRole = ({user,role,project,setProject}) => {
 
-    const removeUser = async (inputEmail,roleArray) => {
+    const removeUser = async () => {
 
         // Remove from role array and users array
-        const roleResults = project[roleArray].filter((email) => email !== inputEmail);
-        const usersResults = project.users.filter((email) => email !== inputEmail);
+        const roleResults = project[role].filter((email) => email !== user);
+        const usersResults = project.users.filter((email) => email !== user);
 
         const docRef = doc(db, "projects", project.id);
         
         await updateDoc(docRef,{
-            [roleArray]:roleResults,
+            [role]:roleResults,
             users:usersResults,
         })
 
@@ -31,9 +31,28 @@ export const UserRole = ({user,role,project,setProject}) => {
         }
     }
 
-    const changeRole = (user) => {
+    const changeRole = () => {
 
         let buttons = []
+
+
+        const updateRole = async (newRole) => {
+
+
+            // remove from current role array
+            const oldRoleArray = project[role].filter((email) => email !== user);
+            // add to new role array
+            project[newRole].push(user);
+            const newRoleArray = project[newRole];
+
+            const docRef = doc(db, "projects", project.id);
+        
+            await updateDoc(docRef,{
+                [role]:oldRoleArray,
+                [newRole]:newRoleArray,
+            })
+
+        }
 
         switch (role) {
             case 'workers':
@@ -45,11 +64,11 @@ export const UserRole = ({user,role,project,setProject}) => {
                     },
                     {
                         text: 'Manager',
-                        onPress: () => console.log('Manager Pressed'),
+                        onPress: () => updateRole('managers'),
                     },
                     {
                         text: 'Co-Owner',
-                        onPress: () => console.log('Co-Owner Pressed')
+                        onPress: () =>  updateRole('coOwners')
                     },
                 ]
                 break;
@@ -62,11 +81,11 @@ export const UserRole = ({user,role,project,setProject}) => {
                     },
                     {
                         text: 'Worker',
-                        onPress: () => console.log('Worker Pressed'),
+                        onPress: () => updateRole('workers'),
                     },
                     {
                         text: 'Co-Owner',
-                        onPress: () => console.log('Co-Owner Pressed')
+                        onPress: () =>  updateRole('coOwner')
                     },
                 ]
                 break;
@@ -84,10 +103,10 @@ export const UserRole = ({user,role,project,setProject}) => {
                 <Text style={styles.user}>{user}</Text>
             </Text>
             <View style={{flexGrow:3,flexDirection:'row',padding:10,justifyContent:'flex-end'}}>
-                <TouchableHighlight style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => changeRole(user)} >
+                <TouchableHighlight style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => changeRole()} >
                     <Entypo name="swap" size={25} color="#737373"/>
                 </TouchableHighlight>
-                <TouchableHighlight style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => removeUser(user,role)}>
+                <TouchableHighlight style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => removeUser()}>
                     <Entypo name="remove-user" size={25} color="#737373"/>
                 </TouchableHighlight>
             </View>
