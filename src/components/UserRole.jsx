@@ -89,6 +89,23 @@ export const UserRole = ({user,role,project,setProject}) => {
                     },
                 ]
                 break;
+            case 'coOwners':
+                buttons = [
+                    {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style:'cancel',
+                    },
+                    {
+                        text: 'Worker',
+                        onPress: () => updateRole('workers'),
+                    },
+                    {
+                        text: 'Manager',
+                        onPress: () =>  updateRole('managers')
+                    },
+                ]
+                break;
 
         }
 

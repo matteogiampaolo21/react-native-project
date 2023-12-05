@@ -1,16 +1,16 @@
-import { SafeAreaView, StyleSheet,Keyboard,ActivityIndicator, Text, TouchableOpacity,TouchableWithoutFeedback,TextInput, View, FlatList, ScrollView, } from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker';
-import React,{useEffect, useState} from 'react'
-import {doc,getDoc,updateDoc} from 'firebase/firestore';
+import { SafeAreaView, StyleSheet,ActivityIndicator, Text, View, FlatList, ScrollView, } from 'react-native'
+import React,{useEffect, useState, useContext} from 'react'
+import {doc,getDoc} from 'firebase/firestore';
 import {db} from '../../firebase/firebaseConfig';
 import { UserRole } from '../components/UserRole';
+import { UserContext } from '../context/UserContext';
 
 
 
 export const AccessPanel = ({route}) => {
   
     // const tempState = {coOwners:[],managers:[],workers:[],name:'',owner:'',task:0,users:[]}
-
+    const currentEmail = useContext(UserContext);
     const {projectID} = route.params;
     const [project,setProject] = useState({})
 
@@ -29,7 +29,8 @@ export const AccessPanel = ({route}) => {
             }
         }
         getProject();
-    },[project])
+        console.log("UseEffect has runned.")
+    },[])
 
     
     
@@ -40,7 +41,7 @@ export const AccessPanel = ({route}) => {
         {project.owner ?
           <SafeAreaView style={styles.wrapper}>
             <ScrollView >
-              {project.owner ?
+              
                 <View>
                   <Text style={styles.userHeading}>Managers</Text>
                   <FlatList
@@ -61,12 +62,23 @@ export const AccessPanel = ({route}) => {
                     ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no workers.</Text>}
                     style={styles.usersContainer}
                   />
-                  
 
+                  {currentEmail === project.owner ?
+                    <>
+                      <Text style={styles.userHeading}>Co-owners</Text>
+                      <FlatList
+                        data={project.coOwners}
+                        renderItem={({item}) => <UserRole user={item} role={"coOwners"} setProject={setProject} project={project}/>}
+                        keyExtractor={item => item}
+                        scrollEnabled={false}
+                        ListEmptyComponent={<Text style={{color:'white',fontSize:15,paddingBottom:5}}>There are no co-owners.</Text>}
+                        style={styles.usersContainer}
+                      /> 
+                    </>
+                  :
+                    <></>
+                  } 
                 </View>
-              :
-                <View></View>
-              }
             </ScrollView>
           </SafeAreaView>
         :
