@@ -1,10 +1,11 @@
 import { StyleSheet, Text, TouchableHighlight, View, Alert } from 'react-native'
-import React from 'react'
+import React,{useState} from 'react'
 import { Entypo } from '@expo/vector-icons'
 import { db } from '../../firebase/firebaseConfig'
 import {doc,updateDoc, getDoc} from 'firebase/firestore';
 
 export const UserRole = ({user,role,project,setProject}) => {
+    const [isDisabled,setDisable] = useState(false);
 
     const removeUser = async () => {
 
@@ -29,6 +30,7 @@ export const UserRole = ({user,role,project,setProject}) => {
             // docSnap.data() will be undefined in this case
             console.log("No such document!");
         }
+        setDisable(false)
     }
 
     const changeRole = () => {
@@ -38,6 +40,7 @@ export const UserRole = ({user,role,project,setProject}) => {
 
         const updateRole = async (newRole) => {
 
+            
 
             // remove from current role array
             const oldRoleArray = project[role].filter((email) => email !== user);
@@ -47,10 +50,12 @@ export const UserRole = ({user,role,project,setProject}) => {
 
             const docRef = doc(db, "projects", project.id);
         
-            await updateDoc(docRef,{
+            const test = await updateDoc(docRef,{
                 [role]:oldRoleArray,
                 [newRole]:newRoleArray,
             })
+            // Need to update project on frontend
+
 
         }
 
@@ -110,7 +115,7 @@ export const UserRole = ({user,role,project,setProject}) => {
         }
 
         Alert.alert(`Change role of ${user} ?`, 'Please select a role below.', buttons);
-
+        setDisable(false);
     }
 
 
@@ -120,10 +125,10 @@ export const UserRole = ({user,role,project,setProject}) => {
                 <Text style={styles.user}>{user}</Text>
             </Text>
             <View style={{flexGrow:3,flexDirection:'row',padding:10,justifyContent:'flex-end'}}>
-                <TouchableHighlight style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => changeRole()} >
+                <TouchableHighlight disabled={isDisabled} style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => {changeRole();setDisable(true)}} >
                     <Entypo name="swap" size={25} color="#737373"/>
                 </TouchableHighlight>
-                <TouchableHighlight style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => removeUser()}>
+                <TouchableHighlight disabled={isDisabled} style={{borderRadius:100,paddingHorizontal:8,paddingVertical:3}} onPress={() => {removeUser();setDisable(true)}}>
                     <Entypo name="remove-user" size={25} color="#737373"/>
                 </TouchableHighlight>
             </View>

@@ -11,7 +11,6 @@ export const Project = ({route,navigation}) => {
 
     const {projectID,accessControl,accessToCreate} = route.params;
 
-    console.log(accessControl,accessToCreate)
     const [title,setTitle] = useState("");
     const [body,setBody] = useState("");
     const [open, setOpen] = useState(false);
@@ -24,8 +23,8 @@ export const Project = ({route,navigation}) => {
     ]);
     const [isHidden,setHidden] = useState(true)
 
-
-    const [tasks,setTasks] = useState([])
+    // start as null for activityIndicator
+    const [tasks,setTasks] = useState(null)
 
     useEffect(()=>{
         
@@ -44,11 +43,11 @@ export const Project = ({route,navigation}) => {
         }
         getTasks();
     },[])
-
+    
 
     const createTask = async () => {
         // add doc to database
-        const document = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID,isCompleted:false});
+        const document = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID,isApproved:false,isCompleted:false});
         console.log("Sent document:",document)
 
         // Update the frontend without refresh
@@ -67,7 +66,7 @@ export const Project = ({route,navigation}) => {
     }
     return (
         <>
-        {tasks.length == 0 ?
+        {tasks === null ?
             <SafeAreaView style={{flex:1,justifyContent:'center',backgroundColor:"#262626"}}>
                 <ActivityIndicator size={'large'} color={"#0ea5e9"} />
             </SafeAreaView>
@@ -143,19 +142,19 @@ export const Project = ({route,navigation}) => {
                 </TouchableWithoutFeedback>
                 <FlatList
                     data={tasks}
-                    renderItem={({item}) => <Task title={item.title} body={item.body} priority={item.priority} />}
+                    renderItem={({item}) => <Task taskID={item.id} isCompleted={item.isCompleted} title={item.title} body={item.body} priority={item.priority} />}
                     keyExtractor={item => item.id}
                 />
 
                 {accessControl ?
                     <View style={{display:'flex',flexDirection:'row',justifyContent:'flex-end',marginRight:20,marginBottom:20,}}>
                         <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,right:70,alignSelf:'flex-end'}}>
-                            <TouchableOpacity onPress={() => navigation.navigate("Access Panel",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
+                            <TouchableOpacity onPress={() => navigation.navigate("Access Panel",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#171717",flex:1,justifyContent:'center',alignItems:'center'}} >
                                 <AntDesign style={{}} name="user" size={30} color="#a3a3a3" />
                             </TouchableOpacity>
                         </View>
                         <View style={{width:60,height:60,borderRadius:100,position:'absolute',bottom:0,alignSelf:'flex-end'}}>
-                            <TouchableOpacity onPress={() => navigation.navigate("Add User",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#404040",flex:1,justifyContent:'center',alignItems:'center'}} >
+                            <TouchableOpacity onPress={() => navigation.navigate("Add User",{projectID:projectID})} style={{borderRadius:100,borderWidth:1,width:60,height:60,backgroundColor:"#171717",flex:1,justifyContent:'center',alignItems:'center'}} >
                                 <AntDesign style={{}} name="bars" size={30} color="#a3a3a3" />
                             </TouchableOpacity>
                         </View>
