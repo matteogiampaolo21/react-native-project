@@ -11,6 +11,7 @@ export const Project = ({route,navigation}) => {
 
     const {projectID,accessControl,accessToCreate} = route.params;
 
+    // For task form
     const [title,setTitle] = useState("");
     const [body,setBody] = useState("");
     const [open, setOpen] = useState(false);
@@ -21,6 +22,7 @@ export const Project = ({route,navigation}) => {
         {label: 'Normal', value: 'Normal'},
         {label: 'Low', value: 'Low'},
     ]);
+    
     const [isHidden,setHidden] = useState(true)
 
     // start as null for activityIndicator
@@ -142,7 +144,7 @@ export const Project = ({route,navigation}) => {
                 </TouchableWithoutFeedback>
                 <FlatList
                     data={tasks}
-                    renderItem={({item}) => <Task taskID={item.id} isCompleted={item.isCompleted} title={item.title} body={item.body} priority={item.priority} />}
+                    renderItem={({item}) => <Task taskID={item.id} isApproved={item.isApproved} tasks={tasks} setTasks={setTasks} isCompleted={item.isCompleted} title={item.title} body={item.body} priority={item.priority} />}
                     keyExtractor={item => item.id}
                 />
 
