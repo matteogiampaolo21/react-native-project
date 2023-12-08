@@ -20,16 +20,16 @@ export const UserRole = ({user,role,project,setProject}) => {
             users:usersResults,
         })
 
-        const docSnap = await getDoc(docRef);
+        // Update on frontend
+        setProject((prevState) => {
+            prevState[role] = roleResults;
+            prevState.users = usersResults;
+            return {...prevState}
+        })
+        
     
-        if (docSnap.exists()) {
-            let tempObj = docSnap.data();
-            tempObj.id = docSnap.id;
-            setProject(tempObj);
-        } else {
-            // docSnap.data() will be undefined in this case
-            console.log("No such document!");
-        }
+
+
         setDisable(false)
     }
 
@@ -40,7 +40,7 @@ export const UserRole = ({user,role,project,setProject}) => {
 
         const updateRole = async (newRole) => {
 
-            
+            console.log('works here')
 
             // remove from current role array
             const oldRoleArray = project[role].filter((email) => email !== user);
@@ -55,6 +55,11 @@ export const UserRole = ({user,role,project,setProject}) => {
                 [newRole]:newRoleArray,
             })
             // Need to update project on frontend
+            setProject((prevState) => {
+                prevState[role] = oldRoleArray;
+                prevState[newRole] = newRoleArray;
+                return {...prevState}
+            })
 
 
         }
@@ -90,7 +95,7 @@ export const UserRole = ({user,role,project,setProject}) => {
                     },
                     {
                         text: 'Co-Owner',
-                        onPress: () =>  updateRole('coOwner')
+                        onPress: () =>  updateRole('coOwners')
                     },
                 ]
                 break;
