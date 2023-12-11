@@ -45,7 +45,6 @@ export const AccessPanel = ({route}) => {
                 <View>
                   <Text style={styles.userHeading}>Managers</Text>
                   <FlatList
-                    extraData={project}
                     data={project.managers}
                     renderItem={({item}) => <UserRole user={item} role={"managers"} setProject={setProject} project={project}/>}
                     keyExtractor={item => item}
@@ -56,7 +55,6 @@ export const AccessPanel = ({route}) => {
 
                   <Text style={styles.userHeading}>Workers</Text>
                   <FlatList
-                    extraData={project}
                     data={project.workers}
                     renderItem={({item}) => <UserRole user={item} role={"workers"} setProject={setProject} project={project}/>}
                     keyExtractor={item => item}

@@ -49,7 +49,7 @@ export const Project = ({route,navigation}) => {
 
     const createTask = async () => {
         // add doc to database
-        const document = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID,isApproved:false,isCompleted:false});
+        const document = await addDoc(collection(db,"tasks"),{title:title, body:body, priority:value,projectID:projectID,isCompleted:false});
         console.log("Sent document:",document)
 
         // Update the frontend without refresh
@@ -85,7 +85,8 @@ export const Project = ({route,navigation}) => {
                             :
                                 <View >
                                 {/* Needs outer view for keyboard dismiss to work properly. */}
-
+                                    
+                                    {/* Add Task to project block */}
                                     <View style={styles.article}>
                                         
                                         <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
@@ -144,7 +145,7 @@ export const Project = ({route,navigation}) => {
                 </TouchableWithoutFeedback>
                 <FlatList
                     data={tasks}
-                    renderItem={({item}) => <Task taskID={item.id} isApproved={item.isApproved} tasks={tasks} setTasks={setTasks} isCompleted={item.isCompleted} title={item.title} body={item.body} priority={item.priority} />}
+                    renderItem={({item}) => <Task taskID={item.id} tasks={tasks} accessControl={accessControl} setTasks={setTasks} isCompleted={item.isCompleted} title={item.title} body={item.body} priority={item.priority} />}
                     keyExtractor={item => item.id}
                 />
 
